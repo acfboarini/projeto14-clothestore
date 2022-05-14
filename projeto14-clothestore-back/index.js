@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import joi from "joi";
 import { MongoClient, ObjectId } from "mongodb";
+import multer from "multer";
 
 const app = express();
 
@@ -21,7 +22,26 @@ mongoClient.connect()
 })
 
 app.use(json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+let nameImage = ""
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+    
+        const extensionImage = file.originalname.split('.')[1];
+
+        const newName = uuid();
+
+        cb(null, `${newName}.${extensionImage}`)
+        nameImage = `${newName}.${extensionImage}`
+    }
+});
+
+const upload = multer({ storage });
 
 app.post("/signup", async (req, res) => {
     const {name, email, senha} = req.body;
@@ -133,7 +153,6 @@ app.post("/products", async (req, res) => {
     const productSchema = joi.object({
         title: joi.string().required(),
         description: joi.string().required(),
-        img: joi.string.required(),
         price: joi.number().required(),
         qtd: joi.number().integer().required()
     });
@@ -149,6 +168,7 @@ app.post("/products", async (req, res) => {
 
         await db.collection("products").insertOne({
             storeId: user._id,
+            img: nameImage,
             ...req.body
         });
 
