@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import joi from "joi";
 import { MongoClient, ObjectId } from "mongodb";
+import { response } from "express";
 
 const app = express();
 
@@ -92,9 +93,9 @@ app.delete("/logout", async (req, res) => {
     console.log(token);
 
     try {
-        const session = await db.collection("sessions").findOne({token});
+        const session = await db.collection("sessions").findOne({token: token});
         console.log(session);
-        const session2 = await db.collection("sessions").deleteOne({token});
+        const session2 = await db.collection("sessions").deleteOne({token: token});
         
         res.status(200).send(session);
 
@@ -114,7 +115,7 @@ app.get("/products", async (req, res) => {
         if (!session) return res.sendStatus(401);
 
         const user = await db.collection("users").findOne({_id: session.id});
-        if (!user) return res.sendStatus(404);
+        if (!user) return res.sendStatus(401);
 
         const products = await db.collections("products").find({id: user._id}).toArray();
         return res.status(202).send(products);
@@ -145,12 +146,13 @@ app.post("/products", async (req, res) => {
         if (!session) return res.sendStatus(401);
 
         const user = await db.collection("users").findOne({_id: session.id});
-        if (!user) return res.sendStatus(404);
+        if (!user) return res.sendStatus(401);
 
         await db.collection("products").insertOne({
             storeId: user._id,
             ...req.body
         });
+        return res.sendStatus(201);
 
     } catch(err) {
         console.log(err);
@@ -170,6 +172,39 @@ app.get("products/:productId", async (req, res) => {
         console.log(err);
         return res.sendStatus(500);
     }
+});
+
+app.post("/cart", async (req, res) => {
+    const {authorization} = req.headers;
+    const token = authorization?.replace("Bearer", "").trim();
+    if (!token) return res.sendStatus(401);
+    const {productId} = req.body;
+
+    try {
+        const session = await db.collection("sessions").findOne({token});
+        if (!session) return res.sendStatus(401);
+
+        const user = await db.collection("users").findOne({_id: session.id});
+        if (!user) return res.sendStatus(401);
+
+        const cart = db.collection("carts").findOne({cartId: user._id});
+        if (cart) {
+            const product = db.collection("carts").findOne({products: productId});
+            if (product) {
+                return res.sendStatus(409);
+            }
+            await db.collection("carts").update({id: user._id}, {$push:{products: productId}});
+        } else {
+            await db.collection("carts").insertOne({
+                cartId: user._id,
+                products: productId
+            });
+        }
+
+    } catch(err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }    
 });
 
 const PORTA = 5000;
