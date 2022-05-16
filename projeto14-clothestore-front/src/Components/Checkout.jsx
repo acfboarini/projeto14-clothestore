@@ -12,8 +12,10 @@ export default function Ckeckout(){
     }
 
     const [like, setLike] = useState(false);
-    const navigate = useNavigate();
-
+    const [value, setValue] = useState(0);
+    const [frete, setFrete] = useState(0);
+    const [total, setTotal] = useState(0);
+    const navigate = useNavigate()
     return(
         <Container>
             <div className="menu">
@@ -21,7 +23,7 @@ export default function Ckeckout(){
                     { !like && < IoHeartOutline  className="icon"  onClick={() => setLike(true)}/>}
                     { like && < IoHeartSharp className="iconSelected"  onClick={() => setLike(false)}/>}
             </div>
-            <h1>CHECKOUT</h1>
+            <h1>Checkout</h1>
             <div className="endereco">
                 <h1> Informações para envio</h1>
             </div>
@@ -36,9 +38,9 @@ export default function Ckeckout(){
             </div>
 
             <div className="price">
-                <p>Valor: R$ 199,00</p>
-                <p>Frete: R$ 0,00</p>
-                <p>Total: R$ 199,00</p>
+                <p>Valor: R$ {value.toFixed(2).replace('.', ',')}</p>
+                <p>Frete: R$ {frete.toFixed(2).replace('.', ',')}</p>
+                <p>Total: R$ {total.toFixed(2).replace('.', ',')}</p>
             </div>
             <button>Confirmar</button>
         </Container>
