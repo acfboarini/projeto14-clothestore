@@ -1,120 +1,92 @@
 import styled from "styled-components";
 import { IoAddSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
-import camisa01 from "../assets/img/camisa01.jpg";
-import france from "../assets/img/france.png";
+import axios from "axios";
 import Header from "./Header"
 import Footer from "./Footer";
+import { useState } from "react";
 
 
 export default function Home(){
+    const config = {
+        headers: {Authorization: `Bearer 1b28fe8e-a51e-4b1d-965a-378c3fa06227`}
+    }
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [products, setProducts] = useState([]);
+    const [reload, setReload] = useState(true);
+
+    if (reload) {
+        const promise = axios.get("http://localhost:5000/products", config)
+        promise.then(response => {
+            console.log(response);
+            setReload(false);
+            setProducts(response.data);
+        })
+        promise.catch(err => console.log("Erro ao buscar produtos"));
+    }
     
     return(
         <Container>
             <Header />
-            
             <h2>Blusas</h2>
             <Products>
-
-                <Product>
-                    < img src={france} alt="produto1" />
-                    <button onClick={() => navigate('/infosProduct')}>
-                        <IoAddSharp className="icon" />
-                    </button>
-                    <p> Camisa France</p>
-                </Product>
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
-
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
+                {products.length === 0? 
+                    <div className="empty">Não ha produtos disponiveis</div>:
+                    products.map(product => {
+                        const {_id, title, price, imgURL} = product;
+                        return (
+                            <Product key={_id}>
+                                <img src={imgURL} alt={title}/>
+                                <button onClick={() => navigate(`/products/${_id}`)}>
+                                    <IoAddSharp className="icon"/>
+                                </button>
+                                <p>{title}</p>
+                                <p>R${price}</p>
+                            </Product>
+                        )
+                    })
+                }
             </Products>
 
             <h2>Blusas</h2>
             <Products>
-
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
-
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
+                {products.length === 0? 
+                    <div className="empty">Não ha produtos disponiveis</div>:
+                    products.map(product => {
+                        const {_id, title, price, imgURL} = product;
+                        return (
+                            <Product key={_id}>
+                                <img src={imgURL} alt={title}/>
+                                <button onClick={() => navigate(`/products/${_id}`)}>
+                                    <IoAddSharp className="icon"/>
+                                </button>
+                                <p>{title}</p>
+                                <p>R${price}</p>
+                            </Product>
+                        )
+                    })
+                }
             </Products>
 
             <h2>Blusas</h2>
             <Products>
-
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
-
-                <Product>
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </Product>
+                {products.length === 0? 
+                    <div className="empty">Não ha produtos disponiveis</div>:
+                    products.map(product => {
+                        const {_id, title, price, imgURL} = product;
+                        return (
+                            <Product key={_id}>
+                                <img src={imgURL} alt={title}/>
+                                <button onClick={() => navigate(`/products/${_id}`)}>
+                                    <IoAddSharp className="icon"/>
+                                </button>
+                                <p>{title}</p>
+                                <p>R${price}</p>
+                            </Product>
+                        )
+                    })
+                }
             </Products>
             < Footer />
         </Container>

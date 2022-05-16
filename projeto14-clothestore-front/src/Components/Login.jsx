@@ -1,7 +1,7 @@
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-export default function Signup() {
+export default function Login() {
     function handleSubmit(event) {
         event.preventDefault();
        
@@ -11,13 +11,11 @@ export default function Signup() {
             <h1>ClotheStore</h1>
             <form onSubmit={handleSubmit}>
                 
-                < input type="text" placeholder="Nome" />
                 < input type="text" placeholder="Email" />
                 < input type="password" placeholder="Senha" />
-                < input type="password" placeholder="Confirmar Senha" />
-                < button type="submit">Cadastrar</button>
+                < button type="submit">Entrar</button>
             </form>
-            <StyledLink to="/">Ja é cadastrado? Entre aqui</StyledLink>
+            <StyledLink to="/signup">Não tem uma conta? Cadastre-se aqui</StyledLink>
         </Container>
     );
 }

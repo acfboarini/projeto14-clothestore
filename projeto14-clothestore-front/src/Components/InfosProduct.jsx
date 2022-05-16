@@ -1,45 +1,79 @@
 import styled from "styled-components";
-import { IoAddSharp,IoArrowBackSharp,IoArrowBackOutline, IoHeartOutline, IoHeartSharp } from "react-icons/io5";
-import { useNavigate } from 'react-router-dom';
-import {useState} from 'react'
-import camiseta from "../assets/img/france.png";
+import { IoArrowBackSharp,IoHeartOutline, IoHeartSharp } from "react-icons/io5";
+import { useNavigate, useParams } from 'react-router-dom';
+import {useState} from 'react';
+import axios from "axios";
 
 export default function InfosProduct(){
-    const [like, setLike] = useState(false);
-    const navigate = useNavigate()
-    return(
-        <Container>
-            
-            <div className="imageProduct">
-                <div className="menu">
-                < IoArrowBackSharp  className="icon" onClick={() => navigate('/home')}/>
-                { !like && < IoHeartOutline  className="icon"  onClick={() => setLike(true)}/>}
-                { like && < IoHeartSharp className="iconSelected"  onClick={() => setLike(false)}/>}
-            </div>
-                
-                <img src={camiseta} alt="camiseta" />
-            </div>
-            
-            <div className="infos"> 
-                <div className="title">
-                    <h1>Camisa France</h1>
-                    
-                </div>
-                <div className="size">
-                    <p>Size</p>
-                    <select>
-                        <option value="P">P</option>
-                        <option value="M">M</option>
-                        <option value="G">G</option>
-                        <option value="GG">GG</option>
-                    </select>
-                </div>
-                <div className="price">
-                    <p>R$ 199,00</p>
-                </div>
+    const config = {
+        headers: {Authorization: `Bearer 1b28fe8e-a51e-4b1d-965a-378c3fa06227`}
+    }
 
-                <button>Add to Cart</button>
-            </div>
+    const navigate = useNavigate();
+    const {productId} = useParams();
+    const [like, setLike] = useState(false);
+    const [product, setProduct] = useState(null);
+    const [reload, setReload] = useState(true);
+
+    if (reload) {
+        const promise = axios.get(`http://localhost:5000/products/${productId}`, config)
+        promise.then(response => {
+            setReload(false);
+            setProduct(response.data);
+        })
+        promise.catch(err => console.log("Erro ao buscar produto"));
+    }
+
+    function addToCart() {
+        const promise = axios.post("http://localhost:5000/cart", {productId: product._id}, config)
+        promise.then(response => {
+            console.log(response);
+            alert("Produto adicionado com sucesso");
+            navigate("/home");
+        })
+        promise.catch(err => alert(err.response.data));
+    }
+
+    return (
+        <Container>
+        {product !== null?
+            <>
+                <div className="imageProduct">
+                    <div className="menu">
+                        <IoArrowBackSharp className="icon" onClick={() => navigate('/home')}/>
+                        {!like && <IoHeartOutline className="icon" onClick={() => setLike(true)}/>}
+                        {like && <IoHeartSharp className="iconSelected" onClick={() => setLike(false)}/>}
+                    </div>
+                    <img src={product.imgURL} alt={product.title}/>
+                </div>
+                    
+                <div className="infos"> 
+                    <div className="title">
+                        <h1>{product.title}</h1> 
+                        
+                    </div>
+
+                    <article>{product.description}</article>
+                    
+                    <div className="size">
+                        <p>Size</p>
+                        <select>
+                            <option value="P">P</option>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                            <option value="GG">GG</option>
+                        </select>
+                    </div>
+                    
+                    <div className="price">
+                        <p>R${product.price}</p>
+                    </div>
+
+                    <button onClick={addToCart}>Adicionar ao Carrinho</button>
+                </div>
+            </>:
+            <div className="empty">Carregando...</div>
+        }
         </Container>
     )
 }
