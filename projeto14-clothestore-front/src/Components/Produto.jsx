@@ -1,19 +1,29 @@
 import styled from "styled-components";
-
-import camisa01 from "./../assets/img/camisa01.jpg";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Produto(props) {
+    const config = {
+        headers: {Authorization: `Bearer b8045eaf-7269-4c44-8912-80056b999a8e`}
+    }
 
-    const {_id, title, price, imgURL, description} = props;
+    const {id, title, price, imgURL, description} = props;
+    //const navigate = useNavigate();
 
-    function removeProduct() {
-
+    async function removeProduct() {
+        try {
+            const {data} = await axios.delete(`http://localhost:5000/cart/${id}`, config);
+            console.log(data);
+            window.location.reload();
+        } catch(err) {
+            console.log(err);
+        }
     }
 
     return (
         <Li>
             <section>
-                <img src={imgURL} alt="produto1"/>
+                <img src={imgURL} alt={title}/>
                 <article>
                     <h3>{title}</h3>
                     <h3 className="price">R${price}</h3>

@@ -1,25 +1,94 @@
 import styled from "styled-components";
-import { IoSearch,IoAddSharp } from "react-icons/io5";
-import camisa01 from "../assets/img/camisa01.jpg";
+import { IoAddSharp } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import Header from "./Header"
+import Footer from "./Footer";
+import { useState } from "react";
+
 
 export default function Home(){
+    const config = {
+        headers: {Authorization: `Bearer 1b28fe8e-a51e-4b1d-965a-378c3fa06227`}
+    }
+
+    const navigate = useNavigate();
+    const [products, setProducts] = useState([]);
+    const [reload, setReload] = useState(true);
+
+    if (reload) {
+        const promise = axios.get("http://localhost:5000/products", config)
+        promise.then(response => {
+            console.log(response);
+            setReload(false);
+            setProducts(response.data);
+        })
+        promise.catch(err => console.log("Erro ao buscar produtos"));
+    }
     
     return(
         <Container>
-            <div className="search">
-                < IoSearch  className="icon"/>
-                <input type="text" placeholder="Search" />
-            </div>
+            <Header />
+            <h2>Blusas</h2>
             <Products>
-                <div className="product">
-                    < img src={camisa01} alt="produto1" />
-                    <button>
-                        <IoAddSharp className="icon"/>
-                    </button>
-                    <p> Blusa Branca</p>
-                </div>
+                {products.length === 0? 
+                    <div className="empty">Não ha produtos disponiveis</div>:
+                    products.map(product => {
+                        const {_id, title, price, imgURL} = product;
+                        return (
+                            <Product key={_id}>
+                                <img src={imgURL} alt={title}/>
+                                <button onClick={() => navigate(`/products/${_id}`)}>
+                                    <IoAddSharp className="icon"/>
+                                </button>
+                                <p>{title}</p>
+                                <p>R${price}</p>
+                            </Product>
+                        )
+                    })
+                }
             </Products>
 
+            <h2>Blusas</h2>
+            <Products>
+                {products.length === 0? 
+                    <div className="empty">Não ha produtos disponiveis</div>:
+                    products.map(product => {
+                        const {_id, title, price, imgURL} = product;
+                        return (
+                            <Product key={_id}>
+                                <img src={imgURL} alt={title}/>
+                                <button onClick={() => navigate(`/products/${_id}`)}>
+                                    <IoAddSharp className="icon"/>
+                                </button>
+                                <p>{title}</p>
+                                <p>R${price}</p>
+                            </Product>
+                        )
+                    })
+                }
+            </Products>
+
+            <h2>Blusas</h2>
+            <Products>
+                {products.length === 0? 
+                    <div className="empty">Não ha produtos disponiveis</div>:
+                    products.map(product => {
+                        const {_id, title, price, imgURL} = product;
+                        return (
+                            <Product key={_id}>
+                                <img src={imgURL} alt={title}/>
+                                <button onClick={() => navigate(`/products/${_id}`)}>
+                                    <IoAddSharp className="icon"/>
+                                </button>
+                                <p>{title}</p>
+                                <p>R${price}</p>
+                            </Product>
+                        )
+                    })
+                }
+            </Products>
+            < Footer />
         </Container>
     );
 }
@@ -32,88 +101,84 @@ const Container = styled.div`
     }
 
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #f5f5f5;
 
-    .search {
+
+
+    h2{
+        text-align:start;
         width: 90%;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        margin-top: 10px;
-        background-color: #f0e3de;
-        border-radius: 10px;
-        padding: 10px;
+        padding: 10px 0;
+        font-family: 'Poppins', sans-serif;
+        font-size: 20px;
+        font-weight: bold;
+        color: #060113;
 
-        .icon{
-            color: #d35005;
-            font-size:35px;
+        :first-of-type{
+            margin-top: 150px;
         }
-        
-        input{
+    }
 
-            width: 100%;
-            /* height: 60px; */
-            background-color: #f0e3de;
-            color: #d35005;
-            text-indent: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-size:20px;
-            
-            &::placeholder{
-                color: #d35005;
-                font-size: 20px;
-            }
-        }
-
-        textarea:focus, input:focus {
-            box-shadow: 0 0 0 0;
-            outline: 0;
-        }
-        
-        
+    :last-of-type{
+        margin-bottom: 70px;
     }
 `
 const Products = styled.div`
 
-        width: 90%;
-        height: auto;
-        background-color: gray;
-        margin-top: 10px;
-        .product{
-            width: 250px;
-            height: 350px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: start;
-            background-color: #ffffff;
-            img{
-                margin-top: 10px;
-                width: 150px;
-                height: 200px;
-            }
-
-            button{
-                margin-top: 10px;
-                background-color: #d35005;
-                .icon{
-                    color: #ffffff;
-                    font-size:35px;
-                }
-
-            }
-
-            p{
-                margin-top: 20px;
-                font-size: 20px;
-                font-family: 'Poppins', sans-serif;
-            }
-
-            
+        *{
+            box-sizing: border-box;
         }
+
+        width: 90%;
+        min-height: 370px;
+        padding: 2px;
+        display: flex;
+        overflow: hidden;
+        overflow-x: scroll;
+        margin-top: 10px;
+
+        
+
+
+`
+
+const Product = styled.div`
+
+    min-width: 200px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    align-items: center;
+    justify-content: start;
+    box-shadow: 0px 0px 10px #e47f54;
+    background-color: #ffffff;
+    img{
+        margin-top: 10px;
+        max-width: 250px;
+        max-height: 200px;
+    }
+
+    button{
+        margin-top: 10px;
+        background-color: #d35005;
+        .icon{
+            color: #ffffff;
+            font-size:35px;
+        }
+
+    }
+
+    p{
+        margin-top: 20px;
+        font-size: 20px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    
 
 `

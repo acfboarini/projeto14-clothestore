@@ -8,17 +8,30 @@ export default function Cart() {
         headers: {Authorization: `Bearer 1b28fe8e-a51e-4b1d-965a-378c3fa06227`}
     }
 
-    const [listProducts, setListProducts] = useState([]);
     const[reload, setReload] = useState(true);
+    const [products, setProducts] = useState([]);
 
     if (reload) {
-        const promise = axios.get("http://localhost:5000/products", config);
+        const promise = axios.get("http://localhost:5000/cart", config);
         promise.then(response => {
-            console.log(response);
+            console.log(response.data);
             setReload(false);
-            setListProducts(response.data);
+            getProductsById(response.data);
         })
         promise.catch(err => console.log("Erro ao buscar produtos"));
+    }
+
+    function getProductsById(ids) {
+        let listaProduto = [];
+        ids.forEach(async id => {
+            try {
+                const {data} = await axios.get(`http://localhost:5000/products/${id}`, config);
+                listaProduto = [...listaProduto, data];
+                setProducts(listaProduto);
+            } catch(err) {
+                console.log(err);
+            }
+        })
     }
 
     return (
@@ -34,8 +47,8 @@ export default function Cart() {
             <Main>
                 <h2>Cart</h2>
                 <ul>       
-                    {listProducts.length !== 0?
-                    listProducts.map(product => {
+                    {products.length !== 0?
+                    products.map(product => {
                         const {_id, title, price, imgURL, description} = product;
                         return <Produto
                             key={_id} id={_id} title={title} price={price}
@@ -44,7 +57,7 @@ export default function Cart() {
                     }): 
                     <div className="empty">Seu carrinho esta vazio</div>}
                 </ul>
-                {listProducts.length !==0? 
+                {products.length !==0?
                     <button>prosseguir para checkout</button>:
                     <></>
                 }

@@ -121,27 +121,6 @@ app.delete("/logout", async (req, res) => {
     }
 });
 
-app.get("/products", async (req, res) => {
-    const {authorization} = req.headers;
-    const token = authorization?.replace("Bearer", "").trim();
-    if (!token) return res.sendStatus(401);
-
-    try {
-        const session = await db.collection("sessions").findOne({token: json(token)});
-        if (!session) return res.sendStatus(401);
-
-        const user = await db.collection("users").findOne({_id: session.userId});
-        if (!user) return res.sendStatus(401);
-
-        const products = await db.collection("products").find({}).toArray();
-        return res.status(202).send(products);
-
-    } catch(err) {
-        console.log(err);
-        return res.sendStatus(500);
-    }
-});
-
 app.post("/products", async (req, res) => {
     const {authorization} = req.headers;
     const token = authorization?.replace("Bearer", "").trim();
@@ -176,13 +155,42 @@ app.post("/products", async (req, res) => {
     }
 });
 
-app.get("products/:productId", async (req, res) => {
+app.get("/products", async (req, res) => {
     const {authorization} = req.headers;
     const token = authorization?.replace("Bearer", "").trim();
     if (!token) return res.sendStatus(401);
 
     try {
+        const session = await db.collection("sessions").findOne({token: json(token)});
+        if (!session) return res.sendStatus(401);
 
+        const user = await db.collection("users").findOne({_id: session.userId});
+        if (!user) return res.sendStatus(401);
+
+        const products = await db.collection("products").find({}).toArray();
+        return res.status(202).send(products);
+
+    } catch(err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+});
+
+app.get("/products/:productId", async (req, res) => {
+    const {authorization} = req.headers;
+    const token = authorization?.replace("Bearer", "").trim();
+    if (!token) return res.sendStatus(401);
+
+    try {
+        const session = await db.collection("sessions").findOne({token: json(token)});
+        if (!session) return res.sendStatus(401);
+
+        const user = await db.collection("users").findOne({_id: session.userId});
+        if (!user) return res.sendStatus(401);
+
+        const productId = req.params.productId;
+        const product = await db.collection("products").findOne({_id: ObjectId(productId)});
+        return res.status(200).send(product);
 
     } catch(err) {
         console.log(err);
@@ -197,25 +205,74 @@ app.post("/cart", async (req, res) => {
     const {productId} = req.body;
 
     try {
-        const session = await db.collection("sessions").findOne({token});
+        const session = await db.collection("sessions").findOne({token: json(token)});
         if (!session) return res.sendStatus(401);
 
-        const user = await db.collection("users").findOne({_id: session.id});
+        const user = await db.collection("users").findOne({_id: session.userId});
         if (!user) return res.sendStatus(401);
 
-        const cart = db.collection("carts").findOne({cartId: user._id});
+        const cart = await db.collection("carts").findOne({userId: user._id});
         if (cart) {
-            const product = db.collection("carts").findOne({products: productId});
-            if (product) {
-                return res.sendStatus(409);
-            }
-            await db.collection("carts").update({id: user._id}, {$push:{products: productId}});
+            const product = await db.collection("carts").findOne({products: ObjectId(productId)});
+            if (product) return res.sendStatus(409);
+
+            await db.collection("carts").updateOne({userId: user._id}, {$push:{products: ObjectId(productId)}});
+            return res.sendStatus(201);
+
         } else {
-            await db.collection("carts").insertOne({
-                cartId: user._id,
-                products: productId
+            const new_cart = await db.collection("carts").insertOne({
+                userId: user._id,
+                products: new Array(ObjectId(productId))
             });
+            return res.status(201).send(new_cart);
         }
+
+    } catch(err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }    
+});
+
+app.get("/cart", async (req, res) => {
+    const {authorization} = req.headers;
+    const token = authorization?.replace("Bearer", "").trim();
+    if (!token) return res.sendStatus(401);
+
+    try {
+        const session = await db.collection("sessions").findOne({token: json(token)});
+        if (!session) return res.sendStatus(401);
+
+        const user = await db.collection("users").findOne({_id: session.userId});
+        if (!user) return res.sendStatus(401);
+
+        const cart = await db.collection("carts").findOne({userId: user._id});
+        if (!cart) return res.sendStatus(404);
+        return res.status(200).send(cart.products);
+
+    } catch(err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }    
+});
+
+app.delete("/cart/:productId", async (req, res) => {
+    const {authorization} = req.headers;
+    const token = authorization?.replace("Bearer", "").trim();
+    if (!token) return res.sendStatus(401);
+    const {productId} = req.params;
+
+    try {
+        const session = await db.collection("sessions").findOne({token: json(token)});
+        if (!session) return res.sendStatus(401);
+
+        const user = await db.collection("users").findOne({_id: session.userId});
+        if (!user) return res.sendStatus(401);
+
+        const cart = await db.collection("carts").findOne({userId: user._id});
+        if (!cart) return res.status(404).send("carrinho do usuario nao encontrado");
+
+        await db.collection("carts").updateOne({userId: user._id}, {$pull:{products: ObjectId(productId)}});
+        return res.sendStatus(200);
 
     } catch(err) {
         console.log(err);
