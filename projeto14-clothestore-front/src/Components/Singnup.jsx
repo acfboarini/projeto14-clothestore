@@ -1,9 +1,27 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios'
 
 export default function Signup() {
-    function handleSubmit(event) {
+
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [checkSenha, setCheckSenha] = useState('');
+
+    const navigate = useNavigate()
+    function  handleSubmit(event) {
         event.preventDefault();
+
+        axios.post('http://localhost:5000/signup', {
+            name,
+            email,
+            senha,
+            checkSenha
+        }).then(response => {
+            navigate("/home");
+        }).catch(err => console.log(err.response.data));
        
     }
     return (
@@ -11,10 +29,10 @@ export default function Signup() {
             <h1>ClotheStore</h1>
             <form onSubmit={handleSubmit}>
                 
-                < input type="text" placeholder="Nome" />
-                < input type="text" placeholder="Email" />
-                < input type="password" placeholder="Senha" />
-                < input type="password" placeholder="Confirmar Senha" />
+                < input type="text" placeholder="Nome" onChange={ e => setName(e.target.value)}/>
+                < input type="text" placeholder="Email" onChange={ e => setEmail(e.target.value)}/>
+                < input type="password" placeholder="Senha" onChange={ e => setSenha(e.target.value)}/>
+                < input type="password" placeholder="Confirmar Senha" onChange={ e => setCheckSenha(e.target.value)}/>
                 < button type="submit">Cadastrar</button>
             </form>
             <StyledLink to="/">Ja é cadastrado? Entre aqui</StyledLink>

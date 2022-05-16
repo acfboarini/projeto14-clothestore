@@ -14,80 +14,63 @@ export default function Home(){
 
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
+    const [category, setCategory] = useState([]);
     const [reload, setReload] = useState(true);
-
+    
     if (reload) {
         const promise = axios.get("http://localhost:5000/products", config)
         promise.then(response => {
             console.log(response);
             setReload(false);
             setProducts(response.data);
+        
+            const futebol = response.data.filter(product => product.category === "futebol");
+            const dataCategory = [...new Set(response.data.map(product => { return product.category}))];
+            setCategory(dataCategory);
+            console.log(futebol);
+            
+
         })
         promise.catch(err => console.log("Erro ao buscar produtos"));
     }
+console.log(category);
+    
     
     return(
         <Container>
             <Header />
-            <h2>Blusas</h2>
-            <Products>
-                {products.length === 0? 
-                    <div className="empty">Não ha produtos disponiveis</div>:
-                    products.map(product => {
-                        const {_id, title, price, imgURL} = product;
-                        return (
-                            <Product key={_id}>
-                                <img src={imgURL} alt={title}/>
-                                <button onClick={() => navigate(`/products/${_id}`)}>
-                                    <IoAddSharp className="icon"/>
-                                </button>
-                                <p>{title}</p>
-                                <p>R${price}</p>
-                            </Product>
-                        )
-                    })
-                }
-            </Products>
 
-            <h2>Blusas</h2>
-            <Products>
-                {products.length === 0? 
-                    <div className="empty">Não ha produtos disponiveis</div>:
-                    products.map(product => {
-                        const {_id, title, price, imgURL} = product;
-                        return (
-                            <Product key={_id}>
-                                <img src={imgURL} alt={title}/>
-                                <button onClick={() => navigate(`/products/${_id}`)}>
-                                    <IoAddSharp className="icon"/>
-                                </button>
-                                <p>{title}</p>
-                                <p>R${price}</p>
-                            </Product>
-                        )
-                    })
-                }
-            </Products>
+            {category.length > 0 ?
 
-            <h2>Blusas</h2>
-            <Products>
-                {products.length === 0? 
-                    <div className="empty">Não ha produtos disponiveis</div>:
-                    products.map(product => {
-                        const {_id, title, price, imgURL} = product;
-                        return (
-                            <Product key={_id}>
-                                <img src={imgURL} alt={title}/>
-                                <button onClick={() => navigate(`/products/${_id}`)}>
-                                    <IoAddSharp className="icon"/>
-                                </button>
-                                <p>{title}</p>
-                                <p>R${price}</p>
-                            </Product>
-                        )
-                    })
-                }
-            </Products>
+                category.map(category => {
+
+                    return (
+                        <>
+                            <h2>{category}</h2>
+                            <Products>
+                                {products.length === 0? 
+                                    <div className="empty">Não ha produtos disponiveis</div>:
+                                    products.map(product => { 
+                                        if (product.category === category) {
+                                            const {_id, title, price, imgURL} = product;
+                                            return (
+                                                <Product key={_id}>
+                                                    <img src={imgURL} alt={title}/>
+                                                    <button onClick={() => navigate(`/products/${_id}`)}>
+                                                        <IoAddSharp className="icon"/>
+                                                    </button>
+                                                    <p>{title}</p>
+                                                    <p>R${price}</p>
+                                                </Product>
+                                            )
+                                        }
+                                    })
+                                }
+                            </Products>
+                        </>
+                    ) 
+            }) : <> </>}
+
             < Footer />
         </Container>
     );
@@ -140,6 +123,10 @@ const Products = styled.div`
         overflow: hidden;
         overflow-x: scroll;
         margin-top: 10px;
+
+        .empty{
+            width: 100%;
+        }
 
         
 

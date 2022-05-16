@@ -131,7 +131,8 @@ app.post("/products", async (req, res) => {
         description: joi.string().required(),
         price: joi.number().required(),
         qtd: joi.number().integer().required(),
-        imgURL: joi.string().required()
+        imgURL: joi.string().required(),
+        category: joi.string().required()
     });
     const validate = productSchema.validate(req.body);
     if (validate.error) return res.sendStatus(400);
