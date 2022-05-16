@@ -5,8 +5,10 @@ import {useState} from 'react';
 import axios from "axios";
 
 export default function InfosProduct(){
+    const userJSON = window.localStorage.getItem("user");
+    const {name, token} = JSON.parse(userJSON);
     const config = {
-        headers: {Authorization: `Bearer 1b28fe8e-a51e-4b1d-965a-378c3fa06227`}
+        headers: {Authorization: `Bearer ${token}`}
     }
 
     const navigate = useNavigate();
@@ -142,6 +144,7 @@ const Container = styled.div`
         background-color: #f0e3de;
         color: #d35005;
         height: 50vh;
+        margin-bottom: 60px;
 
         .title{
         

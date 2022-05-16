@@ -20,7 +20,7 @@ export default function Signup() {
             senha,
             checkSenha
         }).then(response => {
-            navigate("/home");
+            navigate("/");
         }).catch(err => console.log(err.response.data));
        
     }

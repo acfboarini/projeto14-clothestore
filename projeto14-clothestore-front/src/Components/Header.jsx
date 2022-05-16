@@ -1,10 +1,34 @@
 import styled from "styled-components"
 import { IoSearch} from "react-icons/io5";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
-export default function Footer(){
-    return(
+export default function Header(){
+    const userJSON = window.localStorage.getItem("user");
+    const {name, token} = JSON.parse(userJSON);
+    const config = {
+        headers: {Authorization: `Bearer ${token}`}
+    }
+
+    const navigate = useNavigate();
+
+    function logout() {
+        window.localStorage.clear();
+        axios.delete("http://localhost:5000/logout", config);
+        navigate("/");
+    }
+
+    return (
         <Contrainer>
-            <h1> Cloth Store</h1>
+            <div className="topo">
+                <button>
+                    <ion-icon name="person-circle"></ion-icon>
+                </button>
+                <h1>ClotheStore</h1>
+                <button onClick={logout}>
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </button>
+            </div>
             <div className="search">
                 < IoSearch  className="icon"/>
                 <input type="text" placeholder="Search" />
@@ -25,6 +49,14 @@ const Contrainer = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
+
+    .topo {
+        width: 100%;
+        padding: 0px 40px;
+        display: flex;
+        lign-items: center;
+        justify-content: space-between;
+    }
 
     h1{
         margin: 10px 0;

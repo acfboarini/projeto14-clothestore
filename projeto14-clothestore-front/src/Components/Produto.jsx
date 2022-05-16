@@ -3,12 +3,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Produto(props) {
+
+    const userJSON = window.localStorage.getItem("user");
+    const {name, token} = JSON.parse(userJSON);
     const config = {
-        headers: {Authorization: `Bearer b8045eaf-7269-4c44-8912-80056b999a8e`}
+        headers: {Authorization: `Bearer ${token}`}
     }
 
     const {id, title, price, imgURL, description} = props;
-    //const navigate = useNavigate();
 
     async function removeProduct() {
         try {

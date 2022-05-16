@@ -1,14 +1,26 @@
 import styled from "styled-components"
 import { AiFillHome } from "react-icons/ai";
 import { IoCartSharp, IoPersonSharp, IoHeartSharp } from "react-icons/io5";
+import {Link} from "react-router-dom";
 
 export default function Footer(){
     return(
         <Contrainer>
-            < AiFillHome className="icon"/>
-            < IoHeartSharp className="icon"/>
-            <IoCartSharp className="icon"/>
-            <IoPersonSharp className="icon"/>
+            <Link to="/home">
+                < AiFillHome className="icon"/>
+            </Link>
+            
+            <Link to="/favorites">
+                < IoHeartSharp className="icon"/>
+            </Link>
+            
+            <Link to="/cart">
+                <IoCartSharp className="icon"/>
+            </Link>
+            
+            <Link to="/account">
+                <IoPersonSharp className="icon"/>
+            </Link>
         </Contrainer>
     )
 

@@ -1,18 +1,48 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import {useState} from "react";
+import axios from "axios";
 
 export default function Login() {
+    window.localStorage.clear();
+
+    const [email, setEmail] = useState();
+    const [senha, setSenha] = useState();
+    const navigate = useNavigate();
+
     function handleSubmit(event) {
         event.preventDefault();
-       
+
+        const new_login = {
+            email,
+            senha
+        }
+        axios.post("http://localhost:5000/login", new_login)
+        .then(response => {
+            console.log(response);
+            window.localStorage.setItem("user", JSON.stringify(response.data));
+            navigate("/home");
+        })
+        .catch(err => {
+            alert("Erro ao fazer Login");
+            console.log(err);
+        })
+        //window.localStorage.setItem("user", JSON.stringify(response.data));
     }
     return (
         <Container>
             <h1>ClotheStore</h1>
             <form onSubmit={handleSubmit}>
-                
-                < input type="text" placeholder="Email" />
-                < input type="password" placeholder="Senha" />
+                <input type="email" placeholder="Email" 
+                    value={email} 
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                />
+                <input type="password" placeholder="Senha" 
+                    value={senha} 
+                    onChange={e => setSenha(e.target.value)}
+                    required
+                />
                 < button type="submit">Entrar</button>
             </form>
             <StyledLink to="/signup">Não tem uma conta? Cadastre-se aqui</StyledLink>

@@ -5,8 +5,15 @@ import {useState} from 'react'
 import camiseta from "../assets/img/france.png";
 
 export default function Ckeckout(){
+    const userJSON = window.localStorage.getItem("user");
+    const {name, token} = JSON.parse(userJSON);
+    const config = {
+        headers: {Authorization: `Bearer ${token}`}
+    }
+
     const [like, setLike] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
     return(
         <Container>
             <div className="menu">
@@ -50,6 +57,7 @@ const Container = styled.div`
     flex-direction: column;
     width: 100%;
     height: 100%;
+    margin-bottom: 90px;
 
     h1{
         padding: 0 5%;

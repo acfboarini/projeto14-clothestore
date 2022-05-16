@@ -8,8 +8,11 @@ import { useState } from "react";
 
 
 export default function Home(){
+
+    const userJSON = window.localStorage.getItem("user");
+    const {name, token} = JSON.parse(userJSON);
     const config = {
-        headers: {Authorization: `Bearer 1b28fe8e-a51e-4b1d-965a-378c3fa06227`}
+        headers: {Authorization: `Bearer ${token}`}
     }
 
     const navigate = useNavigate();
@@ -27,14 +30,9 @@ export default function Home(){
             const futebol = response.data.filter(product => product.category === "futebol");
             const dataCategory = [...new Set(response.data.map(product => { return product.category}))];
             setCategory(dataCategory);
-            console.log(futebol);
-            
-
         })
         promise.catch(err => console.log("Erro ao buscar produtos"));
-    }
-console.log(category);
-    
+    }  
     
     return(
         <Container>
@@ -42,7 +40,7 @@ console.log(category);
 
             {category.length > 0 ?
 
-                category.map(category => {
+                category.map((category, index) => {
 
                     return (
                         <>
@@ -70,8 +68,6 @@ console.log(category);
                         </>
                     ) 
             }) : <> </>}
-
-            < Footer />
         </Container>
     );
 }

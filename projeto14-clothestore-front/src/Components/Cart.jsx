@@ -2,14 +2,20 @@ import styled from "styled-components";
 import Produto from "./Produto";
 import { useState } from "react";
 import axios from "axios";
+import Header from "./Header";
+import {useNavigate} from "react-router-dom";
 
 export default function Cart() {
+
+    const userJSON = window.localStorage.getItem("user");
+    const {name, token} = JSON.parse(userJSON);
     const config = {
-        headers: {Authorization: `Bearer 1b28fe8e-a51e-4b1d-965a-378c3fa06227`}
+        headers: {Authorization: `Bearer ${token}`}
     }
 
     const[reload, setReload] = useState(true);
     const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
 
     if (reload) {
         const promise = axios.get("http://localhost:5000/cart", config);
@@ -36,14 +42,7 @@ export default function Cart() {
 
     return (
         <>
-            <Header>
-                <button>
-                    <ion-icon name="arrow-back-outline"></ion-icon>
-                </button>
-                <button>
-                    <ion-icon name="log-out-outline"></ion-icon>
-                </button>
-            </Header>
+            <Header/>
             <Main>
                 <h2>Cart</h2>
                 <ul>       
@@ -58,21 +57,14 @@ export default function Cart() {
                     <div className="empty">Seu carrinho esta vazio</div>}
                 </ul>
                 {products.length !==0?
-                    <button>prosseguir para checkout</button>:
+                    <button onClick={() => navigate("/checkout")}>prosseguir para checkout</button>
+                    :
                     <></>
                 }
             </Main>
         </>
     );
 }
-
-const Header = styled.header`
-    padding: 10px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-`;
 
 const Main = styled.main`
     width: 100%;
@@ -82,6 +74,7 @@ const Main = styled.main`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-top: 110px;
 
     h2 {
         width: 100%;
