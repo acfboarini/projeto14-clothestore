@@ -8,7 +8,7 @@ import { MongoClient, ObjectId } from "mongodb";
 import { response } from "express";
 import multer from "multer";
 
-const app = express();
+// OBS: REMOVER TODOS OS JSON(TOKEN) DOS ENDOPOINTS POIS FORAM COLOCADOS ALI APENAS PARA TESTAR A API
 
 let db = null;
 const mongoClient = new MongoClient("mongodb://localhost:27017");
@@ -22,6 +22,7 @@ mongoClient.connect()
 
 })
 
+const app = express();
 app.use(json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -107,16 +108,11 @@ app.post("/login", async (req, res) => {
 
 app.delete("/logout", async (req, res) => {
     const {authorization} = req.headers;
-    console.log(authorization);
     const token = authorization?.replace("Bearer", "").trim();
     if (!token) return res.sendStatus(403);
-    console.log(token);
 
     try {
-        const session = await db.collection("sessions").findOne({token: token});
-        console.log(session);
-        const session2 = await db.collection("sessions").deleteOne({token: token});
-        
+        const session = await db.collection("sessions").deleteOne({token: json(token)});
         res.status(200).send(session);
 
     } catch(err) {
@@ -131,13 +127,13 @@ app.get("/products", async (req, res) => {
     if (!token) return res.sendStatus(401);
 
     try {
-        const session = await db.collection("sessions").findOne({token});
+        const session = await db.collection("sessions").findOne({token: json(token)});
         if (!session) return res.sendStatus(401);
 
-        const user = await db.collection("users").findOne({_id: session.id});
+        const user = await db.collection("users").findOne({_id: session.userId});
         if (!user) return res.sendStatus(401);
 
-        const products = await db.collections("products").find({id: user._id}).toArray();
+        const products = await db.collection("products").find({}).toArray();
         return res.status(202).send(products);
 
     } catch(err) {
@@ -155,21 +151,21 @@ app.post("/products", async (req, res) => {
         title: joi.string().required(),
         description: joi.string().required(),
         price: joi.number().required(),
-        qtd: joi.number().integer().required()
+        qtd: joi.number().integer().required(),
+        imgURL: joi.string().required()
     });
     const validate = productSchema.validate(req.body);
     if (validate.error) return res.sendStatus(400);
     
     try {
-        const session = await db.collection("sessions").findOne({token});
+        const session = await db.collection("sessions").findOne({token: json(token)});
         if (!session) return res.sendStatus(401);
 
-        const user = await db.collection("users").findOne({_id: session.id});
+        const user = await db.collection("users").findOne({_id: session.userId});
         if (!user) return res.sendStatus(401);
 
         await db.collection("products").insertOne({
             storeId: user._id,
-            img: nameImage,
             ...req.body
         });
         return res.sendStatus(201);
