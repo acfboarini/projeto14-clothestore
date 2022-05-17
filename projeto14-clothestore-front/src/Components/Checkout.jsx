@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import { IoCardOutline,IoArrowBackSharp,IoArrowBackOutline, IoHeartOutline, IoHeartSharp } from "react-icons/io5";
+import { IoCardOutline, IoArrowBackSharp, IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
-import {useState} from 'react'
-import camiseta from "../assets/img/france.png";
+import {useState} from 'react';
+import axios from "axios";
+
+import Footer from "./Footer";
 
 export default function Ckeckout(){
     const userJSON = window.localStorage.getItem("user");
@@ -11,39 +13,66 @@ export default function Ckeckout(){
         headers: {Authorization: `Bearer ${token}`}
     }
 
+    const [reload, setReload] = useState(true);
     const [like, setLike] = useState(false);
     const [value, setValue] = useState(0);
     const [frete, setFrete] = useState(0);
     const [total, setTotal] = useState(0);
-    const navigate = useNavigate()
-    return(
-        <Container>
-            <div className="menu">
-                    < IoArrowBackSharp  className="icon" onClick={() => navigate('/home')}/>
-                    { !like && < IoHeartOutline  className="icon"  onClick={() => setLike(true)}/>}
-                    { like && < IoHeartSharp className="iconSelected"  onClick={() => setLike(false)}/>}
-            </div>
-            <h1>Checkout</h1>
-            <div className="endereco">
-                <h1> Informações para envio</h1>
-            </div>
-    
-            <div className="pagamento">
-                <h1>Pagamento</h1>
-                <div className="cartao">
-                    < IoCardOutline  className="icon"/>
-                    <input></input>
-                </div>
-                
-            </div>
+    const navigate = useNavigate();
 
-            <div className="price">
-                <p>Valor: R$ {value.toFixed(2).replace('.', ',')}</p>
-                <p>Frete: R$ {frete.toFixed(2).replace('.', ',')}</p>
-                <p>Total: R$ {total.toFixed(2).replace('.', ',')}</p>
-            </div>
-            <button>Confirmar</button>
-        </Container>
+    if (reload) {
+        const promise = axios.get("http://localhost:5000/cart/total", config);
+        promise.then(response => {
+            console.log(response.data)
+            //getProductsById(response.data);
+        })
+        promise.catch(err => console.log(err));
+    }
+
+    /*function getProductsById(ids) {
+        let listaProduto = [];
+        ids.forEach(async id => {
+            try {
+                const {data} = await axios.get(`http://localhost:5000/products/${id}`, config);
+                listaProduto = [...listaProduto, data];
+                setProducts(listaProduto);
+            } catch(err) {
+                console.log(err);
+            }
+        })
+    }*/
+
+    return(
+        <>
+            <Container>
+                <div className="menu">
+                        < IoArrowBackSharp  className="icon" onClick={() => navigate('/home')}/>
+                        { !like && < IoHeartOutline  className="icon"  onClick={() => setLike(true)}/>}
+                        { like && < IoHeartSharp className="iconSelected"  onClick={() => setLike(false)}/>}
+                </div>
+                <h1>Checkout</h1>
+                <div className="endereco">
+                    <h1> Informações para envio</h1>
+                </div>
+        
+                <div className="pagamento">
+                    <h1>Pagamento</h1>
+                    <div className="cartao">
+                        < IoCardOutline  className="icon"/>
+                        <input></input>
+                    </div>
+                    
+                </div>
+
+                <div className="price">
+                    <p>Valor: R$ {value.toFixed(2).replace('.', ',')}</p>
+                    <p>Frete: R$ {frete.toFixed(2).replace('.', ',')}</p>
+                    <p>Total: R$ {total.toFixed(2).replace('.', ',')}</p>
+                </div>
+                <button>Confirmar</button>
+            </Container>
+            <Footer/>
+        </>
     )
 }
 
@@ -60,6 +89,7 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     margin-bottom: 90px;
+    position: relative;
 
     h1{
         padding: 0 5%;
@@ -148,6 +178,7 @@ const Container = styled.div`
             flex-direction: column;
             width: 100%;
             padding: 0 5%;
+            margin-bottom: 80px;
             p{
                 font-size: 30px;
                 font-weight: bold;
@@ -164,7 +195,7 @@ const Container = styled.div`
             background-color: #ff6e2f;
             box-shadow: 0px 0px 10px #e47f54;
             position: absolute;
-            bottom: 5%;
+            bottom: 0px;
             left: 5%;
             font-family: 'Poppins', sans-serif;
 

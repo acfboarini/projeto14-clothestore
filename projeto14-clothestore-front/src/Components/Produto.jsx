@@ -15,7 +15,6 @@ export default function Produto(props) {
     async function removeProduct() {
         try {
             const {data} = await axios.delete(`http://localhost:5000/cart/${id}`, config);
-            console.log(data);
             window.location.reload();
         } catch(err) {
             console.log(err);

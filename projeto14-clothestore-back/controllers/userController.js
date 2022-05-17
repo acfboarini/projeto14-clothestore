@@ -4,7 +4,7 @@ import joi from "joi";
 import multer from "multer";
 import db from "../db.js";
 
-let nameImage = ""
+let nameImage = "";
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/')
@@ -21,34 +21,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
-
-export async function login (req, res){
-
-    const loginSchema = joi.object({
-        email: joi.string().email().required(),
-        senha: joi.string().required()
-    });
-
-    const validate = loginSchema.validate(req.body);
-    if (validate.error) return res.sendStatus(400);
-
-    try {
-        const user = await db.collection("users").findOne({email: req.body.email});
-        if (!user) return res.sendStatus(404);
-
-        if (user && bcrypt.compareSync(req.body.senha, user.senha)) {
-            const token = uuid();
-            await db.collection("sessions").insertOne({token, userId: user._id});
-            return res.status(201).send({token, name: user.name});
-        }
-        return res.sendStatus(404);
-
-    } catch(err) {
-        console.log(err);
-        return res.sendStatus(500);
-    }
-}
 
 export async function signup (req, res) {
     const {name, email, senha} = req.body;
@@ -77,6 +49,33 @@ export async function signup (req, res) {
             senha: bcrypt.hashSync(senha, SALT)
         });
         return res.sendStatus(201);
+
+    } catch(err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}
+
+export async function login (req, res){
+
+    const loginSchema = joi.object({
+        email: joi.string().email().required(),
+        senha: joi.string().required()
+    });
+
+    const validate = loginSchema.validate(req.body);
+    if (validate.error) return res.sendStatus(400);
+
+    try {
+        const user = await db.collection("users").findOne({email: req.body.email});
+        if (!user) return res.sendStatus(404);
+
+        if (user && bcrypt.compareSync(req.body.senha, user.senha)) {
+            const token = uuid();
+            await db.collection("sessions").insertOne({token, userId: user._id});
+            return res.status(201).send({token, name: user.name});
+        }
+        return res.sendStatus(404);
 
     } catch(err) {
         console.log(err);

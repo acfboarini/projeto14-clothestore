@@ -1,3 +1,5 @@
+import Footer from "./Footer";
+
 export default function Account(){
 
     const userJSON = window.localStorage.getItem("user");
@@ -7,8 +9,11 @@ export default function Account(){
     }
 
     return (
-        <main>
-            Infos da Conta
-        </main> 
+        <>
+            <main>
+                Infos da Conta
+            </main> 
+            <Footer/>
+        </>
     )
 }

@@ -18,7 +18,7 @@ export async function postCart(req, res) {
 
         const cart = await db.collection("carts").findOne({userId: user._id});
         if (cart) {
-            const product = await db.collection("carts").findOne({products: ObjectId(productId)});
+            const product = await db.collection("carts").findOne({userId: user._id, products: ObjectId(productId)});
             if (product) return res.sendStatus(409);
 
             await db.collection("carts").updateOne({userId: user._id}, {$push:{products: ObjectId(productId)}});

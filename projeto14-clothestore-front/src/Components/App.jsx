@@ -27,7 +27,6 @@ export default function App() {
         <Route path="/account" element={<Account/>} />
         <Route path="/favorites" element={<Favorites/>} />
       </Routes>
-      <Footer/>
     </BrowserRouter>
   );
 }

@@ -5,6 +5,8 @@ import axios from "axios";
 import Header from "./Header";
 import {useNavigate} from "react-router-dom";
 
+import Footer from "./Footer";
+
 export default function Cart() {
 
     const userJSON = window.localStorage.getItem("user");
@@ -20,7 +22,6 @@ export default function Cart() {
     if (reload) {
         const promise = axios.get("http://localhost:5000/cart", config);
         promise.then(response => {
-            console.log(response.data);
             setReload(false);
             getProductsById(response.data);
         })
@@ -62,6 +63,7 @@ export default function Cart() {
                     <></>
                 }
             </Main>
+            <Footer/>
         </>
     );
 }
