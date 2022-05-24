@@ -1,4 +1,5 @@
 import {BrowserRouter,Routes, Route} from 'react-router-dom';
+import {useState} from 'react';
 
 import Login from './Login';
 import Signup from './Singnup';
@@ -15,10 +16,11 @@ import Favorites from "./Favorites";
 import Account from "./Account";
 
 export default function App() {
+  
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login/>}/>
+        <Route path="/" element={<Login />}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/home" element={<Home/>}/>
         <Route path="/cart" element={<Cart/>}/>
@@ -27,7 +29,7 @@ export default function App() {
         <Route path="/account" element={<Account/>} />
         <Route path="/favorites" element={<Favorites/>} />
       </Routes>
-      <Footer/>
+      
     </BrowserRouter>
   );
 }

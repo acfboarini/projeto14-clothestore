@@ -21,13 +21,12 @@ export default function Home(){
     const [reload, setReload] = useState(true);
     
     if (reload) {
-        const promise = axios.get("http://localhost:5000/products", config)
+        const promise = axios.get("https://clothestore-back.herokuapp.com/products", config)
         promise.then(response => {
             console.log(response);
             setReload(false);
             setProducts(response.data);
         
-            const futebol = response.data.filter(product => product.category === "futebol");
             const dataCategory = [...new Set(response.data.map(product => { return product.category}))];
             setCategory(dataCategory);
         })
@@ -68,6 +67,7 @@ export default function Home(){
                         </>
                     ) 
             }) : <> </>}
+            <Footer />
         </Container>
     );
 }

@@ -14,7 +14,7 @@ export default function Produto(props) {
 
     async function removeProduct() {
         try {
-            const {data} = await axios.delete(`http://localhost:5000/cart/${id}`, config);
+            const {data} = await axios.delete(`https://clothestore-back.herokuapp.com/cart/${id}`, config);
             console.log(data);
             window.location.reload();
         } catch(err) {

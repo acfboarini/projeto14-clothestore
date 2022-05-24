@@ -14,19 +14,19 @@ export default function Header(){
 
     function logout() {
         window.localStorage.clear();
-        axios.delete("http://localhost:5000/logout", config);
+        axios.delete("https://clothestore-back.herokuapp.com/logout", config);
         navigate("/");
     }
 
     return (
         <Contrainer>
             <div className="topo">
-                <button>
+                {/* <button>
                     <ion-icon name="person-circle"></ion-icon>
-                </button>
+                </button> */}
                 <h1>ClotheStore</h1>
-                <button onClick={logout}>
-                    <ion-icon name="log-out-outline"></ion-icon>
+                <button onClick={logout} className="sair">
+                    <ion-icon name="log-out-outline" ></ion-icon>
                 </button>
             </div>
             <div className="search">
@@ -54,8 +54,14 @@ const Contrainer = styled.div`
         width: 100%;
         padding: 0px 40px;
         display: flex;
-        lign-items: center;
-        justify-content: space-between;
+        align-items: center;
+        justify-content: center;
+
+        .sair{
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
     }
 
     h1{
@@ -87,6 +93,7 @@ const Contrainer = styled.div`
             /* height: 60px; */
             background-color: #f0e3de;
             color: #d35005;
+            border: none;
             text-indent: 10px;
             font-family: 'Poppins', sans-serif;
             font-size:20px;

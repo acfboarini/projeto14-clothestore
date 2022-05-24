@@ -18,7 +18,7 @@ export default function InfosProduct(){
     const [reload, setReload] = useState(true);
 
     if (reload) {
-        const promise = axios.get(`http://localhost:5000/products/${productId}`, config)
+        const promise = axios.get(`https://clothestore-back.herokuapp.com/products/${productId}`, config)
         promise.then(response => {
             setReload(false);
             setProduct(response.data);
@@ -27,7 +27,7 @@ export default function InfosProduct(){
     }
 
     function addToCart() {
-        const promise = axios.post("http://localhost:5000/cart", {productId: product._id}, config)
+        const promise = axios.post("https://clothestore-back.herokuapp.com/cart", {productId: product._id}, config)
         promise.then(response => {
             console.log(response);
             alert("Produto adicionado com sucesso");
@@ -207,5 +207,15 @@ const Container = styled.div`
             font-size: 30px;
             font-weight:400;
         }
+
+        
     }
+    
+    .empty{
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
 `

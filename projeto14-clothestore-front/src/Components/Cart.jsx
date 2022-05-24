@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import Header from "./Header";
 import {useNavigate} from "react-router-dom";
+import Footer from "./Footer";
 
 export default function Cart() {
 
@@ -18,7 +19,7 @@ export default function Cart() {
     const navigate = useNavigate();
 
     if (reload) {
-        const promise = axios.get("http://localhost:5000/cart", config);
+        const promise = axios.get("https://clothestore-back.herokuapp.com/cart", config);
         promise.then(response => {
             console.log(response.data);
             setReload(false);
@@ -31,7 +32,7 @@ export default function Cart() {
         let listaProduto = [];
         ids.forEach(async id => {
             try {
-                const {data} = await axios.get(`http://localhost:5000/products/${id}`, config);
+                const {data} = await axios.get(`https://clothestore-back.herokuapp.com/products/${id}`, config);
                 listaProduto = [...listaProduto, data];
                 setProducts(listaProduto);
             } catch(err) {
@@ -62,6 +63,7 @@ export default function Cart() {
                     <></>
                 }
             </Main>
+            < Footer />
         </>
     );
 }

@@ -17,7 +17,7 @@ export default function Login() {
             email,
             senha
         }
-        axios.post("http://localhost:5000/login", new_login)
+        axios.post("https://clothestore-back.herokuapp.com/login", new_login)
         .then(response => {
             console.log(response);
             window.localStorage.setItem("user", JSON.stringify(response.data));

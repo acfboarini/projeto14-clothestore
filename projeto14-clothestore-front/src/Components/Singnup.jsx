@@ -14,7 +14,7 @@ export default function Signup() {
     function  handleSubmit(event) {
         event.preventDefault();
 
-        axios.post('http://localhost:5000/signup', {
+        axios.post('https://clothestore-back.herokuapp.com/signup', {
             name,
             email,
             senha,

@@ -1,32 +1,26 @@
 import styled from "styled-components"
 import { AiFillHome } from "react-icons/ai";
 import { IoCartSharp, IoPersonSharp, IoHeartSharp } from "react-icons/io5";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
-export default function Footer(){
+export default function Footer(props){
+
+    const navigate = useNavigate();
     return(
         <Contrainer>
-            <Link to="/home">
-                < AiFillHome className="icon"/>
-            </Link>
             
-            <Link to="/favorites">
-                < IoHeartSharp className="icon"/>
-            </Link>
-            
-            <Link to="/cart">
-                <IoCartSharp className="icon"/>
-            </Link>
-            
-            <Link to="/account">
-                <IoPersonSharp className="icon"/>
-            </Link>
+            < AiFillHome className="icon" onClick={() => navigate("/home")}/>
+            < IoHeartSharp className="icon" onClick={() => navigate("/favorites")}/>
+            <IoCartSharp className="icon" onClick={() => navigate("/cart")}/>
+            <IoPersonSharp className="icon" onClick={() => navigate("/person")}/>
+
         </Contrainer>
     )
 
 }
 
 const Contrainer = styled.div`
+    
     display: flex;
     align-items: center;
     /* padding: 0 10px ; */

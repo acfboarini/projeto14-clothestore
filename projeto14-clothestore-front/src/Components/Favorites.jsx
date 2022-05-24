@@ -1,3 +1,5 @@
+import Footer from "./Footer";
+
 export default function Favorites(){
 
     const userJSON = window.localStorage.getItem("user");
@@ -7,8 +9,12 @@ export default function Favorites(){
     }
 
     return (
-        <main>
-            Favoritos
-        </main> 
+        <>
+            <main>
+                Favoritos
+            </main> 
+            <Footer />
+        </>
+        
     )
 }
