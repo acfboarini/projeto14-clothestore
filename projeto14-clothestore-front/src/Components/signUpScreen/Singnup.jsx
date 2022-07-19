@@ -10,7 +10,8 @@ export default function Signup() {
     const [senha, setSenha] = useState('');
     const [checkSenha, setCheckSenha] = useState('');
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
     function  handleSubmit(event) {
         event.preventDefault();
 
@@ -19,13 +20,14 @@ export default function Signup() {
             email,
             senha,
             checkSenha
-        }).then(response => {
+        }).then(() => {
             navigate("/");
         }).catch(err => console.log(err.response.data));
        
     }
+
     return (
-        <Container>
+        <Main>
             <h1>ClotheStore</h1>
             <form onSubmit={handleSubmit}>
                 
@@ -36,8 +38,8 @@ export default function Signup() {
                 < button type="submit">Cadastrar</button>
             </form>
             <StyledLink to="/">Ja é cadastrado? Entre aqui</StyledLink>
-        </Container>
-    );
+        </Main>
+    )
 }
 
 const StyledLink = styled(Link)`
@@ -48,12 +50,7 @@ const StyledLink = styled(Link)`
     margin-top: 35px;
 `;
 
-const Container = styled.div`
-    *{
-        border-radius: 10px;
-        border: none;
-    }
-    
+const Main = styled.main`  
     width: 100%;
     height: 100vh;
     display: flex;
@@ -61,7 +58,7 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
 
-    h1{
+    h1 {
         margin-bottom: 60px;
         font-family: 'Lobster', cursive;
         color: #e47f54;
@@ -70,14 +67,14 @@ const Container = styled.div`
         font-weight: bold;
     }
 
-    form{
+    form {
         display: flex;
         flex-direction: column;
         width: 90%;
         font-family: 'Padauk', sans-serif;
     }
 
-    input{
+    input {
         margin-bottom: 5px;
         width: 100%;
         height: 60px;
@@ -89,12 +86,11 @@ const Container = styled.div`
 
         &::placeholder{
             color: #d35005;
-
         }
     }
     
 
-    button{
+    button {
         margin-top: 30px;
         width: 100%;
         height: 60px;

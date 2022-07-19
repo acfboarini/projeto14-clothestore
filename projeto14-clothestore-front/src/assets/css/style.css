@@ -12,6 +12,7 @@ body button {
     border: none;
     background-color: #f5f5f5;
     padding: 0px;
+    border-radius: 5px;
 }
 
 button > ion-icon {

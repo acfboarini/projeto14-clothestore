@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { ConnectionClosedEvent } from "mongodb";
 import db from "../db.js";
 
 const checkoutRouter = new Router();
@@ -20,22 +19,22 @@ checkoutRouter.get('/cart/total', async (req, res) => {
         if (!cart) return res.sendStatus(404);
 
         //console.log(cart.products);
-
-        let total = 0;
-        await Promise.all(
-            cart.products.forEach(async productId => {
-                const produto = await db.collection("products").findOne({_id: productId});
-                total += produto.price;
-                console.log(total);
-            })
-        );
-        if (total) return res.status(200).send(total);
-        if (!total) console.log("deu ruim");
+        const total = await totalPrice(cart.products);
+        return res.status(200).send({total});
         
     } catch(err) {
         console.log(err);
         return res.sendStatus(500);
     }
 });
+
+async function totalPrice(produtos) {
+    let total = 0;
+    await Promise.all(produtos.map(async productId => {
+        const produto = await db.collection("products").findOne({_id: productId});
+        total += produto.price;
+    }));
+    return total;
+}
 
 export default checkoutRouter;

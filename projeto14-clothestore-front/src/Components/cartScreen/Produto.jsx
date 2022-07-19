@@ -1,20 +1,19 @@
 import styled from "styled-components";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 export default function Produto(props) {
 
     const userJSON = window.localStorage.getItem("user");
-    const {name, token} = JSON.parse(userJSON);
+    const {token} = JSON.parse(userJSON);
     const config = {
         headers: {Authorization: `Bearer ${token}`}
     }
 
-    const {id, title, price, imgURL, description} = props;
+    const {id, title, price, imgURL} = props;
 
     async function removeProduct() {
         try {
-            const {data} = await axios.delete(`http://localhost:5000/cart/${id}`, config);
+            await axios.delete(`http://localhost:5000/cart/${id}`, config);
             window.location.reload();
         } catch(err) {
             console.log(err);

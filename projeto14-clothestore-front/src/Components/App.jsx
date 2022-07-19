@@ -1,18 +1,17 @@
-import {BrowserRouter,Routes, Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Login from './Login';
-import Signup from './Singnup';
-import Home from './Home';
-import Cart from './Cart';
+import Login from './loginScreen/Login';
+import Signup from './signUpScreen/Singnup';
+import Home from './homeScreen/Home';
+import Cart from './cartScreen/Cart';
+import InfosProduct from './infosProductScreen/InfosProduct';
+import Checkout from './checkoutScreen/Checkout';
+import Favorites from "./favoriteScreen/Favorites";
+import Account from "./accountScreen/Account";
 
+/***** Estilos *****/
 import "../assets/css/reset.css";
 import "../assets/css/style.css";
-
-import InfosProduct from './InfosProduct';
-import Checkout from './Checkout';
-import Footer from "./Footer";
-import Favorites from "./Favorites";
-import Account from "./Account";
 
 export default function App() {
   return (

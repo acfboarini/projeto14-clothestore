@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 
 export default function Header(){
     const userJSON = window.localStorage.getItem("user");
-    const {name, token} = JSON.parse(userJSON);
+    const {token} = JSON.parse(userJSON);
     const config = {
         headers: {Authorization: `Bearer ${token}`}
     }
@@ -19,7 +19,7 @@ export default function Header(){
     }
 
     return (
-        <Contrainer>
+        <Header>
             <div className="topo">
                 <button>
                     <ion-icon name="person-circle"></ion-icon>
@@ -33,12 +33,12 @@ export default function Header(){
                 < IoSearch  className="icon"/>
                 <input type="text" placeholder="Search" />
             </div>
-        </Contrainer>
+        </Header>
     )
 
 }
 
-const Contrainer = styled.div`
+const Header = styled.header`
     width: 100%;
     height: 150px;
     display: flex;

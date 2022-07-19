@@ -1,19 +1,18 @@
-import Footer from "./Footer";
+import Footer from "./../Footer";
 
-export default function Favorites(){
+export default function Account(){
 
-    const userJSON = window.localStorage.getItem("user");
+    /*const userJSON = window.localStorage.getItem("user");
     const {name, token} = JSON.parse(userJSON);
     const config = {
         headers: {Authorization: `Bearer ${token}`}
-    }
+    }*/
 
     return (
         <>
             <main>
-                Favoritos
-                
-            </main>
+                Infos da Conta
+            </main> 
             <Footer/>
         </>
     )

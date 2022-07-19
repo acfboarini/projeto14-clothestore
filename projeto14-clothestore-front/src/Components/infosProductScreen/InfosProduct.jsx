@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { IoArrowBackSharp,IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { useNavigate, useParams } from 'react-router-dom';
-import {useState} from 'react';
+import { useState } from 'react';
 import axios from "axios";
 
 export default function InfosProduct(){
     const userJSON = window.localStorage.getItem("user");
-    const {name, token} = JSON.parse(userJSON);
+    const {token} = JSON.parse(userJSON);
     const config = {
         headers: {Authorization: `Bearer ${token}`}
     }
@@ -37,7 +37,7 @@ export default function InfosProduct(){
     }
 
     return (
-        <Container>
+        <Main>
         {product !== null?
             <>
                 <div className="imageProduct">
@@ -76,21 +76,17 @@ export default function InfosProduct(){
             </>:
             <div className="empty">Carregando...</div>
         }
-        </Container>
+        </Main>
     )
 }
 
-const Container = styled.div`
-    *{
-        box-sizing: border-box;
-        border: none;
-    }
+const Main = styled.main`
 
     background-color: #f5f5f5;
     width: 100%;
     height: 100%;
 
-    .menu{
+    .menu {
         padding: 0 5%;
         width: 100%;
         height: 60px;
@@ -111,7 +107,7 @@ const Container = styled.div`
         }
     }
 
-    .imageProduct{
+    .imageProduct {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -125,14 +121,13 @@ const Container = styled.div`
         height: 50vh;
     }
     
-
     img{
         margin-top: 10px;
         max-width: 350px;
         max-height: 400px;
     }
 
-    .infos{
+    .infos {
         width: 100%;
         position: absolute;
         display: flex;
@@ -146,43 +141,38 @@ const Container = styled.div`
         height: 50vh;
         margin-bottom: 60px;
 
-        .title{
-        
+        .title {
             width: 90%;
             justify-content: space-between;
             display: flex;
             margin-bottom: 20px;
-            font-family: 'Poppins', sans-serif;
 
             h1{
                 color: #000000;
                 font-size: 35px;
             }
-
-            
-
         }
 
-        .size{
+        .size {
             display: flex;
             width: 90%;
 
-            p{
+            p {
                 font-size: 20px;
                 font-weight: 400;
                 color: #000000;
-                font-family: 'Poppins', sans-serif;
                 margin-right: 10px;
             }
         }
         
-        .price{
+        .price {
             display: flex;
             width: 100%;
             padding: 0 5%;
             margin-top: 20px;
             justify-content: end;
-            p{
+
+            p {
                 font-size: 30px;
                 text-align: end;
                 font-weight: bold;
@@ -192,7 +182,7 @@ const Container = styled.div`
             
         }
 
-        button{
+        button {
             margin-top: 30px;
             width: 90%;
             height: 60px;
@@ -201,8 +191,6 @@ const Container = styled.div`
             position: absolute;
             bottom: 5%;
             left: 5%;
-            font-family: 'Poppins', sans-serif;
-
             color: #ffffff;
             font-size: 30px;
             font-weight:400;

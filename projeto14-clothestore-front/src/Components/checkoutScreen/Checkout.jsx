@@ -4,26 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import {useState} from 'react';
 import axios from "axios";
 
-import Footer from "./Footer";
+import Footer from "./../Footer";
 
 export default function Ckeckout(){
     const userJSON = window.localStorage.getItem("user");
-    const {name, token} = JSON.parse(userJSON);
+    const {token} = JSON.parse(userJSON);
     const config = {
         headers: {Authorization: `Bearer ${token}`}
     }
 
     const [reload, setReload] = useState(true);
     const [like, setLike] = useState(false);
-    const [value, setValue] = useState(0);
-    const [frete, setFrete] = useState(0);
-    const [total, setTotal] = useState(0);
+    const [total_price, setTotal_price] = useState(0);
     const navigate = useNavigate();
 
     if (reload) {
         const promise = axios.get("http://localhost:5000/cart/total", config);
         promise.then(response => {
-            console.log(response.data)
+            const {total} = response.data;
+            console.log(total);
+            setReload(false);
+            setTotal_price(total);
             //getProductsById(response.data);
         })
         promise.catch(err => console.log(err));
@@ -46,9 +47,9 @@ export default function Ckeckout(){
         <>
             <Container>
                 <div className="menu">
-                        < IoArrowBackSharp  className="icon" onClick={() => navigate('/home')}/>
-                        { !like && < IoHeartOutline  className="icon"  onClick={() => setLike(true)}/>}
-                        { like && < IoHeartSharp className="iconSelected"  onClick={() => setLike(false)}/>}
+                    < IoArrowBackSharp  className="icon" onClick={() => navigate('/home')}/>
+                    { !like && < IoHeartOutline  className="icon"  onClick={() => setLike(true)}/>}
+                    { like && < IoHeartSharp className="iconSelected"  onClick={() => setLike(false)}/>}
                 </div>
                 <h1>Checkout</h1>
                 <div className="endereco">
@@ -65,9 +66,8 @@ export default function Ckeckout(){
                 </div>
 
                 <div className="price">
-                    <p>Valor: R$ {value.toFixed(2).replace('.', ',')}</p>
-                    <p>Frete: R$ {frete.toFixed(2).replace('.', ',')}</p>
-                    <p>Total: R$ {total.toFixed(2).replace('.', ',')}</p>
+                    <p>Total:</p>
+                    <p>R${total_price.toFixed(2).replace('.', ',')}</p>
                 </div>
                 <button>Confirmar</button>
             </Container>
@@ -175,7 +175,8 @@ const Container = styled.div`
 
     .price{
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
             padding: 0 5%;
             margin-bottom: 80px;

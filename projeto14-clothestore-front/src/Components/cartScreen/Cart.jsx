@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import Produto from "./Produto";
 import { useState } from "react";
 import axios from "axios";
-import Header from "./Header";
 import {useNavigate} from "react-router-dom";
 
-import Footer from "./Footer";
+import Produto from "./Produto";
+import Header from "./../Header";
+import Footer from "./../Footer";
 
 export default function Cart() {
 
@@ -45,8 +45,8 @@ export default function Cart() {
         <>
             <Header/>
             <Main>
-                <h2>Cart</h2>
-                <ul>       
+                <h2>Cart by {name}</h2>
+                <ul> 
                     {products.length !== 0?
                     products.map(product => {
                         const {_id, title, price, imgURL, description} = product;
@@ -69,6 +69,7 @@ export default function Cart() {
 }
 
 const Main = styled.main`
+
     width: 100%;
     padding: 10px;
     padding-top: 0px;
